@@ -46,7 +46,7 @@ GlobeTrotter is a full-stack web application designed to help users seamlessly p
 ### 🌐 Frontend
 
 **GlobeTrotter Web App:**
-https://globetrotter-nexusvoid-git-main-nexus-void1.vercel.app/
+https://globetrotter-nexusvoid.ai.studio
 
 ### ⚙️ Backend API
 
