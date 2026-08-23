@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobeTrotter - My Trips</title>
+    
+    <!-- Inter font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Fix text highlighting visibility */
+        ::selection {
+            background: #1e3a8a;
+            color: #ffffff;
+        }
+        ::-moz-selection {
+            background: #1e3a8a;
+            color: #ffffff;
+        }
+
+        /* 1. Background */
+        body {
+            background: url('https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #111827;
+        }
+
+        /* 2. Expanded Glass Panel */
+        .glass-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.15) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-top: 2px solid rgba(255, 255, 255, 0.8);
+            border-left: 2px solid rgba(255, 255, 255, 0.8);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            border-right: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 32px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.5);
+            padding: 48px;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 3. Header & Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            padding-bottom: 24px;
+            margin-bottom: 40px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-title {
+            color: #1e3a8a;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            color: #111827;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #1e3a8a;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .avatar-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #1e3a8a);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            text-decoration: none;
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .avatar-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
+        }
+
+        /* 4. Page Controls */
+        .page-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            letter-spacing: -0.5px;
+        }
+
+        .controls-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to bottom, #2563eb, #1e3a8a);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.6);
+        }
+
+        /* 5. Trips Grid */
+        .trip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .trip-card {
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease, background 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .trip-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .card-content {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            align-self: flex-start;
+            background: rgba(37, 99, 235, 0.15);
+            color: #1e3a8a;
+            border: 1px solid rgba(37, 99, 235, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            font-size: 0.85rem;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .card-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            padding-top: 16px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            color: #1e3a8a;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.6);
+            border-color: white;
+        }
+
+        .icon { width: 24px; height: 24px; color: #1e3a8a; }
+        .icon-sm { width: 16px; height: 16px; color: currentColor; }
+
+        @media (max-width: 900px) {
+            .page-controls { flex-direction: column; align-items: flex-start; }
+            .controls-right { width: 100%; justify-content: space-between; }
+            .glass-container { padding: 24px; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-container">
+        
+        <!-- Header & Navigation -->
+        <header>
+            <a href="dashboard.html" class="brand">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                <span class="brand-title">GlobeTrotter</span>
+            </a>
+            
+            <nav class="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="trips.html" class="active">My Trips</a>
+                <a href="budget.html">Budget</a>
+            </nav>
+
+            <div class="user-actions">
+                <a href="index.html" class="btn-outline" style="padding: 8px 16px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.6); border-radius: 10px; color: #1e3a8a; font-weight: 600; text-decoration: none;">Log Out</a>
+                <a href="profile.html" class="avatar-link" title="Profile Settings">HM</a>
+            </div>
+        </header>
+
+        <!-- Page Controls -->
+        <div class="page-controls">
+            <h1 class="page-title">My Trips</h1>
+            
+            <div class="controls-right">
+                <a href="itinerary.html" class="btn-primary">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    + New Trip
+                </a>
+            </div>
+        </div>
+
+        <!-- Trips Grid -->
+        <div class="trip-grid" id="trip-grid">
+            <p style="color: #374151; font-weight: 500;">Loading trips...</p>
+        </div>
+
+    </div>
+
+    <!-- Script to Render Saved Trips from LocalStorage -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tripGrid = document.getElementById('trip-grid');
+            if (!tripGrid) return;
+
+            let trips = [];
+            try {
+                trips = JSON.parse(localStorage.getItem('globeTrotterUserTrips')) || [];
+            } catch (err) {
+                trips = [];
+            }
+
+            // Fallback default sample trip if none created yet
+            if (trips.length === 0) {
+                trips = [
+                    {
+                        id: 1,
+                        title: "European Summer Escapade",
+                        destination: "Paris, France",
+                        dates: "Jun 10 - 20, 2026",
+                        image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80",
+                        status: "upcoming"
+                    }
+                ];
+            }
+
+            tripGrid.innerHTML = '';
+
+            trips.forEach(trip => {
+                const card = document.createElement('div');
+                card.className = 'trip-card';
+                card.innerHTML = `
+                    <img src="${trip.image || 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80'}" alt="Trip Image" class="card-image">
+                    <div class="card-content">
+                        <span class="status-pill">${trip.status || 'Upcoming'}</span>
+                        <h3 class="card-title">${trip.title}</h3>
+                        <div class="card-meta">
+                            <span>📍 ${trip.destination}</span>
+                            <span>🗓️ ${trip.dates}</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="itinerary.html?id=${trip.id}" class="action-btn">Edit Itinerary</a>
+                            <a href="budget.html?id=${trip.id}" class="action-btn">Budget</a>
+                        </div>
+                    </div>
+                `;
+                tripGrid.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>

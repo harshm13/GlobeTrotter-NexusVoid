@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobeTrotter - Shared Itinerary</title>
+    
+    <!-- Inter font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Fix text highlighting visibility */
+        ::selection {
+            background: #1e3a8a;
+            color: #ffffff;
+        }
+        ::-moz-selection {
+            background: #1e3a8a;
+            color: #ffffff;
+        }
+
+        /* 1. Background */
+        body {
+            background: url('https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #111827;
+        }
+
+        /* 2. Expanded Glass Panel for Dashboard */
+        .glass-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.15) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-top: 2px solid rgba(255, 255, 255, 0.8);
+            border-left: 2px solid rgba(255, 255, 255, 0.8);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            border-right: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 32px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.5);
+            padding: 48px;
+        }
+
+        /* 3. Header & Branding */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-title {
+            color: #1e3a8a;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-outline {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            color: #1e3a8a;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* 4. Trip Information */
+        .trip-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .trip-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        .trip-meta {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .meta-pill {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 5. Glassy Timeline Itinerary */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 32px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -40px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(to bottom, #2563eb, #1e3a8a);
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.4);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .day-card {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.3), 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .day-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .day-location {
+            color: #1e3a8a;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .activity-time {
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 0.9rem;
+            min-width: 70px;
+        }
+
+        .activity-details h4 {
+            font-size: 1.05rem;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .activity-details p {
+            font-size: 0.85rem;
+            color: #4b5563;
+        }
+
+        /* Footer CTA */
+        .public-footer {
+            margin-top: 48px;
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .public-footer p {
+            color: #374151;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            color: #1e3a8a;
+        }
+
+        @media (max-width: 600px) {
+            .glass-container { padding: 24px; }
+            .trip-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-container">
+        
+        <!-- Header -->
+        <header>
+            <a href="dashboard.html" class="brand">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                </svg>
+                <span class="brand-title">GlobeTrotter</span>
+            </a>
+            <a href="#" class="btn-outline" onclick="alert('URL Copied to clipboard!'); return false;">Share Trip</a>
+        </header>
+
+        <!-- Trip Meta Data -->
+        <div class="trip-header">
+            <h1 class="trip-title">European Summer Escapade</h1>
+            <div class="trip-meta">
+                <div class="meta-pill">🗓️ June 10 - June 20, 2026</div>
+                <div class="meta-pill">🌍 3 Cities</div>
+                <div class="meta-pill">👥 4 Travelers</div>
+            </div>
+        </div>
+
+        <!-- Itinerary Timeline -->
+        <div class="timeline">
+            
+            <!-- Day 1 Card -->
+            <div class="timeline-item">
+                <div class="timeline-dot">1</div>
+                <div class="day-card">
+                    <div class="day-header">
+                        <h2 class="day-title">Arrival & Exploration</h2>
+                        <span class="day-location">📍 Paris, France</span>
+                    </div>
+                    <ul class="activity-list">
+                        <li class="activity-item">
+                            <span class="activity-time">10:00 AM</span>
+                            <div class="activity-details">
+                                <h4>Check-in at Le Meurice</h4>
+                                <p>Drop off luggage and freshen up.</p>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <span class="activity-time">01:00 PM</span>
+                            <div class="activity-details">
+                                <h4>Lunch at Le Marais</h4>
+                                <p>Authentic French crepes and coffee.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Day 2 Card -->
+            <div class="timeline-item">
+                <div class="timeline-dot">2</div>
+                <div class="day-card">
+                    <div class="day-header">
+                        <h2 class="day-title">Art & History</h2>
+                        <span class="day-location">📍 Paris, France</span>
+                    </div>
+                    <ul class="activity-list">
+                        <li class="activity-item">
+                            <span class="activity-time">09:00 AM</span>
+                            <div class="activity-details">
+                                <h4>Louvre Museum Guided Tour</h4>
+                                <p>Mona Lisa and classical antiquities.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div> <!-- End Timeline -->
+
+        <!-- Bottom CTA - FIXED to go to itinerary/dashboard instead of login index.html -->
+        <div class="public-footer">
+            <p>Loved this itinerary? Build your own dream journey today.</p>
+            <a href="itinerary.html" class="btn-outline" style="background: linear-gradient(to bottom, #2563eb, #1e3a8a); color: white; border: none; display: inline-block; padding: 12px 24px;">Create Your Trip</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

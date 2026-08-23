@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobeTrotter - Explore Destinations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: url('https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #111827;
+        }
+
+        .glass-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.35) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-top: 2px solid rgba(255, 255, 255, 0.8);
+            border-left: 2px solid rgba(255, 255, 255, 0.8);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            border-right: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 32px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.5);
+            padding: 48px;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            padding-bottom: 24px;
+            margin-bottom: 40px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-title {
+            color: #1e3a8a;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            color: #111827;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #1e3a8a;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .avatar-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #1e3a8a);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            text-decoration: none;
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .avatar-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
+        }
+
+        .explore-hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .explore-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+        }
+
+        .explore-hero p {
+            color: #374151;
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .search-bar-large {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 100px;
+            padding: 14px 24px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .search-bar-large input {
+            border: none;
+            background: transparent;
+            outline: none;
+            color: #111827;
+            width: 100%;
+            margin-left: 12px;
+            font-size: 1rem;
+        }
+
+        .search-bar-large input::placeholder {
+            color: #4b5563;
+        }
+
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 100px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .filter-tab.active {
+            background: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
+
+        .filter-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .destination-card {
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease, background 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .destination-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .card-content {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-category {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2563eb;
+            margin-bottom: 6px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            color: #4b5563;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            padding-top: 16px;
+        }
+
+        .card-rating {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-add-trip {
+            padding: 8px 16px;
+            background: linear-gradient(to bottom, #2563eb, #1e3a8a);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
+            transition: transform 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-add-trip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(30, 58, 138, 0.4);
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            color: #1e3a8a;
+        }
+
+        .icon-sm {
+            width: 16px;
+            height: 16px;
+            color: currentColor;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="glass-container">
+        <!-- Header & Navigation -->
+        <header>
+            <a href="dashboard.html" class="brand">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                </svg>
+                <span class="brand-title">GlobeTrotter</span>
+            </a>
+            <nav class="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="trips.html">My Trips</a>
+                <a href="explore.html" class="active">Explore</a>
+                <a href="travel-hub.html">Travel Hub</a>
+            </nav>
+            <div class="user-actions">
+                <a href="profile.html" class="avatar-link" title="Profile Settings">HM</a>
+            </div>
+        </header>
+
+        <!-- Explore Hero Section -->
+        <div class="explore-hero">
+            <h1>Discover Your Next Adventure</h1>
+            <p>Explore world-class cities, hidden local gems, and iconic landmarks.</p>
+            <div class="search-bar-large">
+                <svg class="icon-sm" style="color: #4b5563;" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" placeholder="Search cities, countries, or landmarks...">
+            </div>
+        </div>
+
+        <!-- Filter Categories -->
+        <div class="filter-tabs">
+            <a href="javascript:void(0)" class="filter-tab active">All Destinations</a>
+            <a href="javascript:void(0)" class="filter-tab">Metropolis & Cities</a>
+            <a href="javascript:void(0)" class="filter-tab">Landmarks & History</a>
+            <a href="javascript:void(0)" class="filter-tab">Nature & Mountains</a>
+        </div>
+
+        <!-- Destinations Grid -->
+        <div class="destinations-grid">
+            <!-- Card 1 -->
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80"
+                    alt="Paris" class="card-image">
+                <div class="card-content">
+                    <span class="card-category">Landmark & Romance</span>
+                    <h3 class="card-title">Paris, France</h3>
+                    <p class="card-description">Experience world-class art at the Louvre, scenic walks down the Seine,
+                        and culinary masterpieces.</p>
+                    <div class="card-footer">
+                        <span class="card-rating">⭐ 4.9 (1.4k)</span>
+                        <a href="trips.html" class="btn-add-trip">Add to Trip</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800&q=80"
+                    alt="Tokyo" class="card-image">
+                <div class="card-content">
+                    <span class="card-category">Culture & Technology</span>
+                    <h3 class="card-title">Tokyo, Japan</h3>
+                    <p class="card-description">A vibrant blend of ultra-modern neon skyscrapers and historic, serene
+                        ancient temples.</p>
+                    <div class="card-footer">
+                        <span class="card-rating">⭐ 4.8 (2.1k)</span>
+                        <a href="trips.html" class="btn-add-trip">Add to Trip</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80"
+                    alt="Bali" class="card-image">
+                <div class="card-content">
+                    <span class="card-category">Nature & Relaxation</span>
+                    <h3 class="card-title">Bali, Indonesia</h3>
+                    <p class="card-description">Lush tropical jungles, sacred cliffside temples, and serene beaches
+                        perfect for unwinding.</p>
+                    <div class="card-footer">
+                        <span class="card-rating">⭐ 4.7 (950)</span>
+                        <a href="trips.html" class="btn-add-trip">Add to Trip</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 4 -->
+            <div class="destination-card">
+                <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=800&q=80"
+                    alt="Amalfi Coast" class="card-image">
+                <div class="card-content">
+                    <span class="card-category">Coastal & Scenic</span>
+                    <h3 class="card-title">Amalfi Coast, Italy</h3>
+                    <p class="card-description">Dramatic cliffside pastel towns overlooking sparkling turquoise
+                        Mediterranean waters.</p>
+                    <div class="card-footer">
+                        <span class="card-rating">⭐ 4.9 (1.8k)</span>
+                        <a href="trips.html" class="btn-add-trip">Add to Trip</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/auth.js"></script>
+</body>
+
+</html>

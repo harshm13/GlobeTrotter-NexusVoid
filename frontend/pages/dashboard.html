@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobeTrotter - Dashboard</title>
+    
+    <!-- Inter font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Fix text highlighting visibility */
+        ::selection {
+            background: #1e3a8a;
+            color: #ffffff;
+        }
+        ::-moz-selection {
+            background: #1e3a8a;
+            color: #ffffff;
+        }
+
+        /* 1. Background */
+        body {
+            background: url('https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #111827;
+        }
+
+        /* 2. Expanded Glass Panel */
+        .glass-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.15) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-top: 2px solid rgba(255, 255, 255, 0.8);
+            border-left: 2px solid rgba(255, 255, 255, 0.8);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            border-right: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 32px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.5);
+            padding: 48px;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 3. Header & Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            padding-bottom: 24px;
+            margin-bottom: 40px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-title {
+            color: #1e3a8a;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            color: #111827;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #1e3a8a;
+        }
+
+        .btn-outline {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            color: #1e3a8a;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* 4. Welcome Hero */
+        .dashboard-hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .hero-text h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .hero-text p {
+            color: #374151;
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to bottom, #2563eb, #1e3a8a);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.4);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 5. Trips Section */
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 20px;
+        }
+
+        .trip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .trip-card {
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            align-self: flex-start;
+            background: rgba(37, 99, 235, 0.15);
+            color: #1e3a8a;
+            border: 1px solid rgba(37, 99, 235, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 6px;
+        }
+
+        .card-meta {
+            font-size: 0.85rem;
+            color: #4b5563;
+            margin-bottom: 16px;
+        }
+
+        .card-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            color: #1e3a8a;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .icon { width: 24px; height: 24px; color: #1e3a8a; }
+
+        @media (max-width: 768px) {
+            .glass-container { padding: 24px; }
+            .dashboard-hero { flex-direction: column; align-items: flex-start; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-container">
+        
+        <!-- Header -->
+        <header>
+            <a href="dashboard.html" class="brand">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                <span class="brand-title">GlobeTrotter</span>
+            </a>
+            
+            <nav class="nav-links">
+                <a href="dashboard.html" class="active">Dashboard</a>
+                <a href="explore.html">Explore</a>
+                <a href="travel-hub.html">Travel Hub</a>
+            </nav>
+
+            <a href="index.html" class="btn-outline">Log Out</a>
+        </header>
+
+        <!-- Welcome Hero -->
+        <div class="dashboard-hero">
+            <div class="hero-text">
+                <h1>Welcome back, Traveler!</h1>
+                <p id="hero-subtitle">Here are your saved journeys and upcoming itineraries.</p>
+            </div>
+            <a href="itinerary.html" class="btn-primary">
+                + Create New Trip
+            </a>
+        </div>
+
+        <!-- Upcoming Journeys Section -->
+        <h2 class="section-title">✈️ Upcoming Journeys</h2>
+        <div class="trip-grid" id="trip-grid">
+            <!-- Dynamic trips will load here -->
+            <p style="color: #4b5563;">Loading trips...</p>
+        </div>
+
+    </div>
+
+    <!-- Script to load trips safely from localStorage or backend fallback -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const tripGrid = document.getElementById('trip-grid');
+            const heroSubtitle = document.getElementById('hero-subtitle');
+            
+            let trips = [];
+
+            try {
+                // Try fetching from backend API first
+                const response = await fetch("http://127.0.0.1:8000/api/trips/", {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("globeTrotterToken")}`
+                    }
+                });
+                if (response.ok) {
+                    trips = await response.json();
+                } else {
+                    throw new Error("Backend offline");
+                }
+            } catch (error) {
+                // Fallback to localStorage if backend is not running
+                trips = JSON.parse(localStorage.getItem('globeTrotterUserTrips')) || [
+                    {
+                        id: 1,
+                        title: "European Summer Escapade",
+                        destination: "Paris, France",
+                        dates: "Jun 10 - 20, 2026",
+                        image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80",
+                        status: "upcoming"
+                    }
+                ];
+            }
+
+            if (!tripGrid) return;
+            tripGrid.innerHTML = '';
+
+            if (trips.length === 0) {
+                tripGrid.innerHTML = '<p style="color: #4b5563;">No upcoming journeys found. Click "Create New Trip" to start!</p>';
+                if (heroSubtitle) heroSubtitle.textContent = "You have 0 upcoming trips. Let's make one unforgettable.";
+                return;
+            }
+
+            if (heroSubtitle) {
+                heroSubtitle.textContent = `You have ${trips.length} upcoming trip(s). Let's make it unforgettable.`;
+            }
+
+            trips.forEach(trip => {
+                const card = document.createElement('div');
+                card.className = 'trip-card';
+                card.innerHTML = `
+                    <img src="${trip.image || 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80'}" alt="Trip Image" class="card-image">
+                    <div class="card-content">
+                        <span class="status-pill">${trip.status || 'Upcoming'}</span>
+                        <h3 class="card-title">${trip.title}</h3>
+                        <div class="card-meta">📍 ${trip.destination}</div>
+                        <div class="card-actions">
+                            <a href="itinerary.html?id=${trip.id}" class="action-btn">View Itinerary</a>
+                            <a href="budget.html?id=${trip.id}" class="action-btn">Budget</a>
+                        </div>
+                    </div>
+                `;
+                tripGrid.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>
