@@ -7,15 +7,15 @@ function checkAuth() {
     window.location.pathname === "/";
 
   if (!token && !isAuthPage) {
-    window.location.href = "index.html";
+    window.location.href = "../index.html";
   } else if (token && isAuthPage) {
-    window.location.href = "dashboard.html";
+    window.location.href = "pages/dashboard.html";
   }
 }
 
 function logout() {
   localStorage.removeItem("globeTrotterToken");
-  window.location.href = "index.html";
+  window.location.href = "../index.html";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const data = await response.json();
         localStorage.setItem("globeTrotterToken", data.access_token);
-        window.location.href = "dashboard.html";
+        window.location.href = "pages/dashboard.html";
       } catch (err) {
         showAlert(err.message);
       }
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const data = await response.json();
         localStorage.setItem("globeTrotterToken", data.access_token);
-        window.location.href = "dashboard.html";
+        window.location.href = "pages/dashboard.html";
       } catch (err) {
         showAlert(err.message);
       }
